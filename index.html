@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Support by Ayan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Styles - Same as before */
+        header, .navbar, .blog-name, .header-widget { display: none !important; }
+        body { font-family: 'Poppins', sans-serif; background-color: #0b0f19; color: white; margin: 0; padding: 0; text-align: center; -webkit-tap-highlight-color: transparent; }
+        
+        .custom-header {
+            background: linear-gradient(90deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+            padding: 15px; box-shadow: 0 4px 15px rgba(253, 29, 29, 0.4);
+            margin-bottom: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .brand-name { font-family: 'Orbitron', sans-serif; font-size: 18px; color: #fff; text-transform: uppercase; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .user-badge { font-size: 11px; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 20px; display: none; }
+
+        .container { max-width: 480px; margin: 0 auto; padding: 10px; padding-bottom: 60px; }
+
+        .poster-container {
+            width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 20px;
+            border: 2px solid #fd1d1d; background: #000; min-height: 200px; position: relative;
+        }
+        .poster-img { width: 100%; display: block; }
+
+        #promo-banner {
+            background: #e1306c; color: white; padding: 8px; border-radius: 8px; margin-bottom: 15px;
+            font-size: 13px; font-weight: bold; animation: pulse 2s infinite; display: none;
+        }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.8; } }
+        
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; animation: fadeIn 0.5s; }
+        .menu-item {
+            background: #161b22; border: 1px solid #30363d; border-radius: 15px; padding: 20px;
+            cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .menu-item:hover { transform: translateY(-5px); border-color: #fd1d1d; box-shadow: 0 5px 15px rgba(253, 29, 29, 0.2); }
+        .menu-icon { font-size: 30px; margin-bottom: 10px; background: -webkit-linear-gradient(#833ab4, #fd1d1d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .menu-title { font-weight: bold; font-size: 14px; color: #e6edf3; }
+
+        .service-section { display: none; animation: slideIn 0.3s; }
+        .back-btn { 
+            background: #333; color: white; border: none; padding: 8px 15px; border-radius: 50px; 
+            margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; font-size: 14px;
+        }
+        .section-title { color: #fbbf24; font-size: 20px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
+
+        .card {
+            background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .plan-name { font-size: 15px; font-weight: 600; color: #fff; text-align: left; }
+        .price-box { text-align: right; }
+        .price { color: #00d2ff; font-size: 18px; font-weight: bold; }
+        .old-price { font-size: 12px; color: #666; text-decoration: line-through; margin-right: 5px; }
+
+        .buy-btn {
+            background: linear-gradient(45deg, #00d2ff, #007bff); color: white; border: none; padding: 8px 18px; 
+            border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 13px; margin-left: 10px;
+        }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; z-index: 9999; }
+        .modal-content { background: #0d1117; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; position: relative; border: 1px solid #333; height: auto; max-height: 85vh; overflow-y: auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #ff4b4b; }
+        
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-field { width: 92%; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #010409; color: white; font-size: 15px; outline: none; transition: 0.3s; }
+        .label-text { font-size: 12px; color: #888; margin-bottom: 5px; display: block; }
+
+        .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .pay-btn { background: white; color: black; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; border: 1px solid #ccc; display: block; cursor: pointer; }
+        
+        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #00d2ff; width: 20px; height: 20px; animation: spin 1s linear infinite; margin: 0 auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* APP POPUP */
+        #app-prompt { 
+            display: none; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 10000;
+            justify-content: center; align-items: center;
+        }
+        .app-box {
+            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            padding: 30px 20px; border-radius: 20px; text-align: center;
+            width: 85%; max-width: 320px; border: 1px solid #333;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+            animation: zoomIn 0.4s ease;
+        }
+        .app-logo { font-size: 50px; color: #00d2ff; margin-bottom: 15px; }
+        .app-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; color: white; }
+        .app-desc { font-size: 13px; color: #aaa; margin-bottom: 25px; }
+        
+        .btn-install {
+            background: linear-gradient(90deg, #00d2ff, #007bff); width: 100%; padding: 12px;
+            border: none; border-radius: 50px; color: white; font-weight: bold; font-size: 15px;
+            cursor: pointer; margin-bottom: 15px; display: block; text-decoration: none;
+        }
+        .btn-web {
+            background: transparent; border: 1px solid #555; width: 100%; padding: 10px;
+            border-radius: 50px; color: #ccc; font-size: 13px; cursor: pointer;
+        }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* BACKUP QR */
+        #backup-copy { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333; animation: fadeIn 0.5s; }
+        .copy-box { background: #1f2937; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid #444; }
+        .upi-text { color: #fbbf24; font-weight: bold; font-size: 14px; font-family: monospace; }
+        .qr-box { background: white; padding: 10px; border-radius: 10px; display: inline-block; margin-top: 15px; }
+        .qr-img { width: 150px; height: 150px; display: block; }
+        
+        .valid { color: #22c55e; font-weight: bold; font-size: 13px; display: none; margin-top: 5px; }
+        .invalid { color: #ef4444; font-weight: bold; font-size: 13px; display: none; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div id="app-prompt">
+    <div class="app-box">
+        <div class="app-logo"><i class="fas fa-rocket"></i></div>
+        <div class="app-title">Experience Better! 🚀</div>
+        <div class="app-desc">Install our App for faster service, exclusive offers & instant support.</div>
+        
+        <a href="https://drive.google.com/uc?export=download&id=1Gc5RnKd-gcux1GPRURKcH_lEU5i9P1_j" class="btn-install">⬇️ Install App Now</a>
+        
+        <button class="btn-web" onclick="closeAppPrompt()">Continue to Website</button>
+    </div>
+</div>
+
+<div class="custom-header">
+    <div class="brand-name"><i class="fab fa-instagram"></i> Insta Support</div>
+    <div id="user-status" class="user-badge">👤 Guest</div>
+</div>
+
+<div class="container">
+    <div class="poster-container">
+        <img src="https://i.ibb.co/n8nbmTF8/1000083995.jpg" alt="Offer Poster" class="poster-img">
+    </div>
+
+    <div id="promo-banner">🎉 FIRST ORDER 30% OFF APPLIED!</div>
+
+    <div id="main-menu" class="menu-grid">
+        <div class="menu-item" onclick="loadService('followers')"><i class="fas fa-user-plus menu-icon"></i><div class="menu-title">Followers</div></div>
+        <div class="menu-item" onclick="loadService('likes')"><i class="fas fa-heart menu-icon"></i><div class="menu-title">Post Likes</div></div>
+        <div class="menu-item" onclick="loadService('reel-likes')"><i class="fab fa-gratipay menu-icon"></i><div class="menu-title">Reel Likes</div></div>
+        <div class="menu-item" onclick="loadService('views')"><i class="fas fa-play menu-icon"></i><div class="menu-title">Reel Views</div></div>
+        <div class="menu-item" onclick="loadService('comments')"><i class="fas fa-comment-dots menu-icon"></i><div class="menu-title">Comments</div></div>
+    </div>
+
+    <div id="service-container" class="service-section">
+        <button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i> Back</button>
+        <div id="sec-title" class="section-title">Service Name</div>
+        <div id="plans-list"></div>
+    </div>
+</div>
+
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2 style="margin:0; color:#fff;">Welcome! 👋</h2>
+        <p style="font-size:13px; color:#aaa; margin-bottom:20px;">Register to grab 30% discount</p>
+        
+        <div id="login-step-1">
+            <div class="input-group">
+                <label class="label-text">Your Name</label>
+                <input type="text" id="regName" class="input-field" placeholder="Enter full name">
+            </div>
+            <div class="input-group">
+                <label class="label-text">Mobile Number</label>
+                <input type="number" id="regPhone" class="input-field" placeholder="+91 xxxxx xxxxx">
+            </div>
+            <button onclick="sendOTP()" style="background:#00d2ff; color:white; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer;">
+                Get OTP <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+
+        <div id="login-step-2" style="display:none;">
+            <p style="color:#22c55e; font-size:12px;">✅ OTP sent successfully!</p>
+            <div class="input-group">
+                <label class="label-text">Enter OTP</label>
+                <input type="number" id="otpInput" class="input-field" placeholder="Enter 4 digit code">
+            </div>
+            <div class="loader" id="otp-loader"></div>
+            <button onclick="verifyOTP()" style="background:#22c55e; color:white; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:10px;">
+                Verify & Login
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="processModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeProcess()">&times;</span>
+        
+        <div id="step-link" style="display:block;">
+            <h3 style="color:#fbbf24;">Enter Details</h3>
+            <div class="input-group">
+                <label id="link-label" class="label-text">Link</label>
+                <input type="text" id="inputLink" class="input-field" placeholder="...">
+            </div>
+            <button class="buy-btn" style="width:100%; padding:12px;" onclick="goToPay()">Next Step ➡️</button>
+        </div>
+
+        <div id="step-pay" style="display:none;">
+            <h3 style="color:#00d2ff;">Pay ₹<span id="pay-amt">0</span></h3>
+            <p style="font-size:12px; color:#aaa; margin-bottom:15px;">Tap below to pay</p>
+            
+            <div class="app-grid">
+                <div onclick="forcePay('phonepe')" class="pay-btn"><img src="https://img.icons8.com/color/48/phone-pe.png" width="20" style="vertical-align:middle;"> PhonePe</div>
+                <div onclick="forcePay('gpay')" class="pay-btn"><img src="https://img.icons8.com/color/48/google-pay-india.png" width="20" style="vertical-align:middle;"> GPay</div>
+                <div onclick="forcePay('paytm')" class="pay-btn"><img src="https://img.icons8.com/color/48/paytm.png" width="20" style="vertical-align:middle;"> Paytm</div>
+                <div onclick="forcePay('upi')" class="pay-btn">BHIM / Other</div>
+            </div>
+
+            <button onclick="showBackup()" style="width:100%; padding:10px; margin-top:20px; background: #e1306c; border:none; color:white; font-weight:bold; border-radius:8px; cursor:pointer;">
+                ⚠️ Payment Problem? Click Here
+            </button>
+            
+            <div id="backup-copy">
+                <p style="font-size:12px; color:#fff; margin-bottom:5px;">Scan QR or Copy ID</p>
+                <div class="qr-box"><img id="dynamic-qr" src="" alt="QR Code" class="qr-img"></div>
+                <p style="font-size:10px; color:#aaa;">Amount ₹<span id="qr-amt">0</span> will be auto-filled</p>
+                <div class="copy-box" onclick="copyID()">
+                    <span class="upi-text">ayan3529@ptyes</span> 
+                    <span style="background:#333; padding:5px 10px; border-radius:5px; font-size:11px;">COPY</span>
+                </div>
+            </div>
+
+            <button class="buy-btn" style="width:100%; margin-top:20px; background:#333;" onclick="goToVerify()">I Have Paid ✅</button>
+        </div>
+
+        <div id="step-verify" style="display:none;">
+            <h3>Verification</h3>
+            <div class="input-group">
+                <label class="label-text">Enter 12-Digit UTR</label>
+                <input type="number" id="utr" class="input-field" placeholder="Ex: 4321..." oninput="checkUTR()">
+                <div id="valid-msg" class="valid">✅ Verified</div>
+                <div id="invalid-msg" class="invalid">❌ Invalid UTR</div>
+            </div>
+            <a id="wa-btn" href="#" class="buy-btn" style="display:none; background:#22c55e; text-decoration:none; padding:12px;">🚀 Send to WhatsApp</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const upiID = "ayan3529@ptyes";
+    
+    // UPDATED RATES & OFFERS
+    // Followers: Offer Logic Applied
+    // Others: Flat Price (Offer = Regular)
+    const servicesData = {
+        'followers': {
+            title: "Buy Followers", type: "profile",
+            plans: [
+                { name: "100 Followers", offer: 13, regular: 19 },
+                { name: "200 Followers", offer: 25, regular: 35 },
+                { name: "500 Followers", offer: 53, regular: 75 },
+                { name: "1000 Followers", offer: 104, regular: 149 },
+                { name: "2500 Followers", offer: 251, regular: 359 },
+                { name: "5000 Followers", offer: 490, regular: 699 }
+            ]
+        },
+        'likes': {
+            title: "Post Likes", type: "url",
+            plans: [
+                { name: "100 Likes", offer: 20, regular: 20 },
+                { name: "200 Likes", offer: 40, regular: 40 },
+                { name: "500 Likes", offer: 90, regular: 90 },
+                { name: "1000 Likes", offer: 170, regular: 170 },
+                { name: "2000 Likes", offer: 340, regular: 340 },
+                { name: "3000 Likes", offer: 510, regular: 510 },
+                { name: "5000 Likes", offer: 850, regular: 850 },
+                { name: "10k Likes", offer: 1650, regular: 1650 }
+            ]
+        },
+        'reel-likes': {
+            title: "Reel Likes", type: "url",
+            plans: [
+                { name: "100 Likes", offer: 20, regular: 20 },
+                { name: "200 Likes", offer: 40, regular: 40 },
+                { name: "500 Likes", offer: 90, regular: 90 },
+                { name: "1000 Likes", offer: 170, regular: 170 },
+                { name: "2000 Likes", offer: 340, regular: 340 },
+                { name: "3000 Likes", offer: 510, regular: 510 },
+                { name: "5000 Likes", offer: 850, regular: 850 },
+                { name: "10k Likes", offer: 1650, regular: 1650 }
+            ]
+        },
+        'views': {
+            title: "Reel Views", type: "url",
+            plans: [
+                { name: "1000 Views", offer: 10, regular: 10 },
+                { name: "2000 Views", offer: 20, regular: 20 },
+                { name: "5000 Views", offer: 50, regular: 50 },
+                { name: "10k Views", offer: 100, regular: 100 },
+                { name: "20k Views", offer: 200, regular: 200 },
+                { name: "50k Views", offer: 500, regular: 500 },
+                { name: "100k Views", offer: 1000, regular: 1000 },
+                { name: "500k Views", offer: 5000, regular: 5000 }
+            ]
+        },
+        'comments': {
+            title: "Custom Comments", type: "url",
+            plans: [
+                { name: "20 Comments", offer: 10, regular: 10 }, /* REDUCED PRICE */
+                { name: "50 Comments", offer: 35, regular: 35 },
+                { name: "100 Comments", offer: 70, regular: 70 }
+            ]
+        }
+    };
+
+    let isLoggedIn = false;
+    let hasOrdered = false;
+    let currentServiceData = {};
+    let currentPlanName = "";
+    let currentPrice = 0;
+    let userLink = "";
+    let userName = "Guest";
+
+    window.onload = function() {
+        if(localStorage.getItem('AYAN_SMM_LOGIN') === 'true') {
+            isLoggedIn = true;
+            userName = localStorage.getItem('AYAN_USER_NAME');
+            document.getElementById('user-status').innerText = "👤 " + userName;
+            document.getElementById('user-status').style.display = "block";
+        }
+        if(localStorage.getItem('AYAN_SMM_ORDER_DONE') === 'true') {
+            hasOrdered = true;
+            document.getElementById('promo-banner').style.display = 'none';
+        } else {
+            document.getElementById('promo-banner').style.display = 'block';
+        }
+        
+        const isPopupDismissed = localStorage.getItem('AYAN_POPUP_DISMISSED') === 'true';
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isInApp = /wv|WebView|App|WebIntoApp/i.test(userAgent);
+
+        if (!isPopupDismissed && !isInApp) {
+            document.getElementById('app-prompt').style.display = 'flex';
+        } else if (!isPopupDismissed && isInApp) {
+             document.getElementById('app-prompt').style.display = 'flex';
+        }
+    }
+
+    function closeAppPrompt() {
+        localStorage.setItem('AYAN_POPUP_DISMISSED', 'true');
+        document.getElementById('app-prompt').style.display = 'none';
+    }
+
+    function loadService(key) {
+        let data = servicesData[key];
+        currentServiceData = data;
+        document.getElementById('main-menu').style.display = 'none';
+        document.getElementById('service-container').style.display = 'block';
+        document.getElementById('sec-title').innerText = data.title;
+        let listHTML = "";
+        data.plans.forEach(plan => {
+            // Logic: If Offer == Regular, show only one price. Else show crossed out price.
+            let finalPrice = hasOrdered ? plan.regular : plan.offer;
+            
+            // Override: For non-followers, price is always flat (offer price)
+            if (key !== 'followers') {
+                finalPrice = plan.offer; 
+            }
+
+            let priceDisplay = "";
+            if (plan.offer === plan.regular || key !== 'followers') {
+                priceDisplay = `<span class="price">₹${finalPrice}</span>`;
+            } else {
+                priceDisplay = hasOrdered 
+                    ? `<span class="price">₹${finalPrice}</span>` 
+                    : `<span class="old-price">₹${plan.regular}</span> <span class="price">₹${finalPrice}</span>`;
+            }
+            
+            listHTML += `<div class="card"><div><div class="plan-name">${plan.name}</div><div class="price-box">${priceDisplay}</div></div><button class="buy-btn" onclick="initOrder('${plan.name}', ${finalPrice})">BUY</button></div>`;
+        });
+        document.getElementById('plans-list').innerHTML = listHTML;
+    }
+
+    function goHome() {
+        document.getElementById('service-container').style.display = 'none';
+        document.getElementById('main-menu').style.display = 'grid';
+    }
+
+    function sendOTP() {
+        let name = document.getElementById('regName').value;
+        let phone = document.getElementById('regPhone').value;
+        if(name.length < 3 || phone.length < 10) { alert("Please enter valid Name and Phone Number"); return; }
+        document.getElementById('login-step-1').style.opacity = '0.5';
+        setTimeout(() => {
+            document.getElementById('login-step-1').style.display = 'none';
+            document.getElementById('login-step-2').style.display = 'block';
+            document.getElementById('otp-loader').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('otp-loader').style.display = 'none';
+                document.getElementById('otpInput').value = Math.floor(1000 + Math.random() * 9000);
+            }, 2000);
+            localStorage.setItem('AYAN_USER_NAME', name);
+        }, 1500);
+    }
+
+    function verifyOTP() {
+        let otp = document.getElementById('otpInput').value;
+        if(otp.length === 4) {
+            localStorage.setItem('AYAN_SMM_LOGIN', 'true');
+            isLoggedIn = true;
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('user-status').innerText = "👤 " + localStorage.getItem('AYAN_USER_NAME');
+            document.getElementById('user-status').style.display = "block";
+            alert("Login Successful! 🎉");
+        } else { alert("Invalid OTP"); }
+    }
+
+    function initOrder(planName, price) {
+        if(!isLoggedIn) { document.getElementById('loginModal').style.display = 'flex'; return; }
+        currentPlanName = planName;
+        currentPrice = price;
+        let label = document.getElementById('link-label');
+        let input = document.getElementById('inputLink');
+        if(currentServiceData.type === 'profile') {
+            label.innerText = "Enter Instagram Username";
+            input.placeholder = "Ex: @ayan_king";
+        } else {
+            label.innerText = "Enter Post / Reel URL";
+            input.placeholder = "https://instagram.com/reel/....";
+        }
+        input.value = "";
+        document.getElementById('step-link').style.display = 'block';
+        document.getElementById('step-pay').style.display = 'none';
+        document.getElementById('step-verify').style.display = 'none';
+        document.getElementById('processModal').style.display = 'flex';
+    }
+
+    function closeProcess() { document.getElementById('processModal').style.display = 'none'; }
+
+    function goToPay() {
+        let val = document.getElementById('inputLink').value;
+        if(val.length < 3) { alert("Invalid Link"); return; }
+        userLink = val;
+        document.getElementById('step-link').style.display = 'none';
+        document.getElementById('step-pay').style.display = 'block';
+        document.getElementById('pay-amt').innerText = currentPrice;
+    }
+
+    function goToVerify() {
+        document.getElementById('step-pay').style.display = 'none';
+        document.getElementById('step-verify').style.display = 'block';
+        document.getElementById('utr').value = "";
+        document.getElementById('valid-msg').style.display = 'none';
+        document.getElementById('wa-btn').style.display = 'none';
+    }
+
+    function checkUTR() {
+        let utr = document.getElementById('utr').value.toString();
+        if(utr.length === 12) {
+            document.getElementById('valid-msg').style.display = 'block';
+            document.getElementById('invalid-msg').style.display = 'none';
+            document.getElementById('wa-btn').style.display = 'block';
+            localStorage.setItem('AYAN_SMM_ORDER_DONE', 'true');
+            hasOrdered = true; 
+            let msg = `*NEW ORDER ALERT!* 🚀\n\n👤 *User:* ${localStorage.getItem('AYAN_USER_NAME')}\n📌 *Service:* ${currentServiceData.title}\n📦 *Plan:* ${currentPlanName}\n🔗 *Link:* ${userLink}\n💰 *Paid:* ₹${currentPrice}\n🆔 *UTR:* ${utr}\n✅ Verify and start.`;
+            document.getElementById('wa-btn').href = `https://wa.me/918116603529?text=${encodeURIComponent(msg)}`;
+        } else {
+            document.getElementById('valid-msg').style.display = 'none';
+            document.getElementById('invalid-msg').style.display = 'block';
+            document.getElementById('wa-btn').style.display = 'none';
+        }
+    }
+    
+    function forcePay(app) {
+        let baseUrl = `upi://pay?pa=${upiID}&am=${currentPrice}&cu=INR`;
+        if (app === 'phonepe') { window.location.href = baseUrl; } 
+        else if (app === 'gpay') { window.location.href = `tez://upi/pay?pa=${upiID}&am=${currentPrice}&cu=INR`; } 
+        else if (app === 'paytm') { window.location.href = `paytmmp://pay?pa=${upiID}&am=${currentPrice}&cu=INR`; } 
+        else { window.location.href = baseUrl; }
+    }
+
+    function showBackup() {
+        document.getElementById('backup-copy').style.display = 'block';
+        document.getElementById('qr-amt').innerText = currentPrice;
+        let qrData = `upi://pay?pa=${upiID}&am=${currentPrice}&cu=INR`;
+        let qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+        document.getElementById('dynamic-qr').src = qrURL;
+    }
+
+    function copyID() {
+        navigator.clipboard.writeText(upiID).then(() => { alert("UPI ID Copied! Pay manually."); });
+    }
+</script>
+
+</body>
+</html>
