@@ -8,13 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* BASE SETTINGS */
+        /* CORE STYLES */
         body { 
             font-family: 'Manrope', sans-serif; background-color: #000; margin: 0; padding: 0; 
             display: flex; justify-content: center; min-height: 100vh; -webkit-tap-highlight-color: transparent;
         }
 
-        /* MOBILE FRAME - DESKTOP FRIENDLY */
         .mobile-frame {
             width: 100%; max-width: 450px; background: #0f0f0f; min-height: 100vh; 
             box-shadow: 0 0 50px rgba(255,255,255,0.05); position: relative; overflow-x: hidden; display: flex; flex-direction: column;
@@ -27,14 +26,15 @@
             border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100;
         }
         .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .profile-pic { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #22c55e; background: #333; }
-        .user-meta { text-align: left; }
+        /* GLITCH FIX: pointer-events: none stops image from hijacking the click */
+        .profile-pic { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #22c55e; background: #333; pointer-events: none; }
+        .user-meta { text-align: left; pointer-events: none; }
         .user-name { font-size: 15px; font-weight: 800; color: #fff; }
         .header-icons i { font-size: 18px; color: #fff; background: #222; padding: 10px; border-radius: 50%; margin-left: 5px; border: 1px solid #333; cursor: pointer; }
 
         .container { padding: 15px; padding-bottom: 80px; }
 
-        /* DASHBOARD STATS */
+        /* STATS CARD */
         .stats-card { background: linear-gradient(135deg, #1e1e1e, #111); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; display: flex; justify-content: space-around; }
         .stat-val { font-size: 18px; font-weight: 800; color: #22c55e; }
         .stat-label { font-size: 10px; color: #777; text-transform: uppercase; margin-top: 5px; }
@@ -59,23 +59,20 @@
 
         /* MODALS */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; z-index: 10000; }
-        .modal-content { background: #1a1a1a; width: 85%; max-width: 380px; padding: 25px; border-radius: 20px; text-align: center; border: 1px solid #333; position: relative; animation: popIn 0.3s; }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-content { background: #1a1a1a; width: 85%; max-width: 380px; padding: 25px; border-radius: 20px; text-align: center; border: 1px solid #333; position: relative; animation: fadeIn 0.2s; }
         .input-field { width: 90%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #0f0f0f; color: white; margin-bottom: 12px; outline: none; }
 
-        /* PHONEPE STYLE RECEIPT (IMPROVED) */
+        /* PHONEPE RECEIPT */
         #success-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 20000; flex-direction: column; }
         .pp-header { background: #22c55e; padding: 50px 20px 80px; color: white; text-align: center; border-radius: 0 0 20px 20px; }
         .pp-icon-box { width: 70px; height: 70px; background: white; border-radius: 50%; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center; }
         .pp-icon-box i { color: #22c55e; font-size: 35px; }
-        
         .pp-card { background: white; width: 85%; margin: -60px auto 20px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); color: #333; }
         .pp-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
         .pp-label { color: #666; font-weight: 500; }
         .pp-val { color: #000; font-weight: 700; }
         .pp-divider { border-bottom: 1px dashed #ddd; margin: 15px 0; }
         .pp-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; color: #22c55e; }
-
         .pp-footer { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 15px; }
         .pp-btn { padding: 12px 30px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; width: 140px; }
         .pp-btn-share { background: white; border: 1px solid #22c55e; color: #22c55e; }
@@ -89,9 +86,16 @@
         .price { color: #22c55e; font-weight: bold; }
         .old-price { color: #666; font-size: 11px; text-decoration: line-through; margin-right: 5px; }
         
-        .utr-error { color: #ff4b4b; font-size: 11px; text-align: left; margin-bottom: 10px; display: none; }
         .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .pay-option { background: #222; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        
+        /* PROFILE MODAL FIX */
+        .profile-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        .profile-big-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #22c55e; object-fit: cover; margin-bottom: 10px; }
+        .hist-item { background: #222; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-left: 3px solid #22c55e; }
+        .utr-error { color: #ff4b4b; font-size: 11px; text-align: left; margin-bottom: 10px; display: none; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -115,7 +119,6 @@
     </div>
 
     <div class="container">
-        
         <div class="stats-card">
             <div class="stat-item"><div class="stat-val">₹<span id="stat-spend">0</span></div><div class="stat-label">Spent</div></div>
             <div class="divider"></div>
@@ -125,32 +128,17 @@
         </div>
 
         <div class="live-activity">
-            <div class="live-icon"><i class="fas fa-bolt" style="color:#fbbf24; font-size:14px;"></i></div>
-            <div class="ticker-wrapper">
-                <div class="ticker-text" id="live-ticker">@amit_22 ordered 100 Followers just now...</div>
-            </div>
+            <div class="ticker-wrapper"><div class="ticker-text" id="live-ticker">@ayan_king ordered 1000 Followers just now...</div></div>
         </div>
 
         <div class="section-head">Services</div>
         <div id="main-menu" class="menu-grid">
-            <div class="menu-item" onclick="loadService('followers')">
-                <div class="menu-icon-box"><i class="fas fa-user-plus" style="color: #4facfe;"></i></div><div class="menu-title">Followers</div>
-            </div>
-            <div class="menu-item" onclick="loadService('likes')">
-                <div class="menu-icon-box"><i class="fas fa-heart" style="color: #ff4b4b;"></i></div><div class="menu-title">Likes</div>
-            </div>
-            <div class="menu-item" onclick="loadService('reel-likes')">
-                <div class="menu-icon-box"><i class="fab fa-gratipay" style="color: #ff9a9e;"></i></div><div class="menu-title">Reel Likes</div>
-            </div>
-            <div class="menu-item" onclick="loadService('views')">
-                <div class="menu-icon-box"><i class="fas fa-play" style="color: #fbc2eb;"></i></div><div class="menu-title">Views</div>
-            </div>
-            <div class="menu-item" onclick="loadService('comments')">
-                <div class="menu-icon-box"><i class="fas fa-comment-dots" style="color: #a18cd1;"></i></div><div class="menu-title">Comments</div>
-            </div>
-            <div class="menu-item" style="opacity:0.4;">
-                <div class="menu-icon-box"><i class="fas fa-crown" style="color: gold;"></i></div><div class="menu-title">VIP</div>
-            </div>
+            <div class="menu-item" onclick="loadService('followers')"><div class="menu-icon-box"><i class="fas fa-user-plus" style="color: #4facfe;"></i></div><div class="menu-title">Followers</div></div>
+            <div class="menu-item" onclick="loadService('likes')"><div class="menu-icon-box"><i class="fas fa-heart" style="color: #ff4b4b;"></i></div><div class="menu-title">Likes</div></div>
+            <div class="menu-item" onclick="loadService('reel-likes')"><div class="menu-icon-box"><i class="fab fa-gratipay" style="color: #ff9a9e;"></i></div><div class="menu-title">Reel Likes</div></div>
+            <div class="menu-item" onclick="loadService('views')"><div class="menu-icon-box"><i class="fas fa-play" style="color: #fbc2eb;"></i></div><div class="menu-title">Views</div></div>
+            <div class="menu-item" onclick="loadService('comments')"><div class="menu-icon-box"><i class="fas fa-comment-dots" style="color: #a18cd1;"></i></div><div class="menu-title">Comments</div></div>
+            <div class="menu-item" style="opacity:0.4;"><div class="menu-icon-box"><i class="fas fa-crown" style="color: gold;"></i></div><div class="menu-title">VIP</div></div>
         </div>
 
         <div class="section-head" style="margin-top: 25px; border-color: #555;">Coming Soon</div>
@@ -160,9 +148,7 @@
         </div>
 
         <div id="service-container" class="service-section">
-            <div style="text-align:left; margin-bottom:15px; color:#aaa; cursor:pointer;" onclick="goHome()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </div>
+            <div style="text-align:left; margin-bottom:15px; color:#aaa; cursor:pointer;" onclick="goHome()"><i class="fas fa-arrow-left"></i> Back to Dashboard</div>
             <div id="sec-title" class="section-head" style="border:none; padding:0; margin-left:0;">Service</div>
             <div id="plans-list"></div>
         </div>
@@ -176,7 +162,6 @@
         <h2 style="margin:0;">Payment Successful</h2>
         <p style="margin:5px 0 0; opacity:0.8; font-size:13px;">Order Placed Successfully</p>
     </div>
-    
     <div class="pp-card">
         <div class="pp-row"><span class="pp-label">Order ID</span><span class="pp-val" id="ss-id">#123456</span></div>
         <div class="pp-row"><span class="pp-label">Service</span><span class="pp-val" id="ss-plan">...</span></div>
@@ -185,7 +170,6 @@
         <div class="pp-divider"></div>
         <div class="pp-total"><span>Total Paid</span><span id="ss-price">₹0</span></div>
     </div>
-
     <div class="pp-footer">
         <button class="pp-btn pp-btn-share" onclick="shareReceipt()">Share</button>
         <button class="pp-btn pp-btn-home" onclick="closeSuccess()">Order Again</button>
@@ -293,8 +277,7 @@
     <input type="hidden" name="_captcha" value="false">
     <input type="hidden" name="Service" id="f_service"><input type="hidden" name="Plan" id="f_plan">
     <input type="hidden" name="Price" id="f_price"><input type="hidden" name="Link" id="f_link">
-    <input type="hidden" name="User" id="f_name"><input type="hidden" name="Phone" id="f_phone">
-    <input type="hidden" name="UTR" id="f_utr">
+    <input type="hidden" name="User" id="f_name"><input type="hidden" name="Phone" id="f_phone"><input type="hidden" name="UTR" id="f_utr">
 </form>
 
 <script>
@@ -302,57 +285,37 @@
     let currentUser = { name: "Guest", phone: "", pic: "https://i.ibb.co/3kbcw0g/user-placeholder.png" };
     let currentOrder = {}; 
 
-    // PLANS DATA (Regular Prices)
+    // PLANS CONFIG
     const servicesData = {
         'followers': { title: "Followers", type: "profile", plans: [
-            { name: "100 Followers", regular: 19 },
-            { name: "200 Followers", regular: 35 },
-            { name: "500 Followers", regular: 75 },
-            { name: "1000 Followers", regular: 149 },
-            { name: "2000 Followers", regular: 280 },
-            { name: "5000 Followers", regular: 699 },
-            { name: "10k Followers", regular: 1300 },
-            { name: "20k Followers", regular: 2500 }
+            { name: "100 Followers", regular: 19 }, { name: "200 Followers", regular: 35 },
+            { name: "500 Followers", regular: 75 }, { name: "1000 Followers", regular: 149 },
+            { name: "2000 Followers", regular: 280 }, { name: "5000 Followers", regular: 699 },
+            { name: "10k Followers", regular: 1300 }, { name: "20k Followers", regular: 2500 }
         ]},
         'likes': { title: "Post Likes", type: "url", plans: [
-            { name: "100 Likes", regular: 20 },
-            { name: "200 Likes", regular: 40 },
-            { name: "500 Likes", regular: 90 },
-            { name: "1000 Likes", regular: 170 },
-            { name: "2000 Likes", regular: 330 },
-            { name: "5000 Likes", regular: 800 },
-            { name: "10k Likes", regular: 1500 },
-            { name: "20k Likes", regular: 2900 }
+            { name: "100 Likes", regular: 20 }, { name: "200 Likes", regular: 40 },
+            { name: "500 Likes", regular: 90 }, { name: "1000 Likes", regular: 170 },
+            { name: "2000 Likes", regular: 330 }, { name: "5000 Likes", regular: 800 },
+            { name: "10k Likes", regular: 1500 }, { name: "20k Likes", regular: 2900 }
         ]},
         'reel-likes': { title: "Reel Likes", type: "url", plans: [
-            { name: "100 Likes", regular: 20 },
-            { name: "200 Likes", regular: 40 },
-            { name: "500 Likes", regular: 90 },
-            { name: "1000 Likes", regular: 170 },
-            { name: "2000 Likes", regular: 330 },
-            { name: "5000 Likes", regular: 800 },
-            { name: "10k Likes", regular: 1500 },
-            { name: "20k Likes", regular: 2900 }
+            { name: "100 Likes", regular: 20 }, { name: "200 Likes", regular: 40 },
+            { name: "500 Likes", regular: 90 }, { name: "1000 Likes", regular: 170 },
+            { name: "2000 Likes", regular: 330 }, { name: "5000 Likes", regular: 800 },
+            { name: "10k Likes", regular: 1500 }, { name: "20k Likes", regular: 2900 }
         ]},
         'views': { title: "Reel Views", type: "url", plans: [
-            { name: "1000 Views", regular: 10 },
-            { name: "2000 Views", regular: 20 },
-            { name: "5000 Views", regular: 50 },
-            { name: "10k Views", regular: 100 },
-            { name: "20k Views", regular: 200 },
-            { name: "50k Views", regular: 500 },
-            { name: "100k Views", regular: 1000 },
-            { name: "500k Views", regular: 5000 }
+            { name: "1000 Views", regular: 10 }, { name: "2000 Views", regular: 20 },
+            { name: "5000 Views", regular: 50 }, { name: "10k Views", regular: 100 },
+            { name: "20k Views", regular: 200 }, { name: "50k Views", regular: 500 },
+            { name: "100k Views", regular: 1000 }, { name: "500k Views", regular: 5000 }
         ]},
         'comments': { title: "Comments", type: "url", plans: [
-            { name: "10 Comments", regular: 10 },
-            { name: "20 Comments", regular: 20 },
-            { name: "30 Comments", regular: 30 },
-            { name: "50 Comments", regular: 50 },
-            { name: "75 Comments", regular: 75 },
-            { name: "100 Comments", regular: 100 },
-            { name: "200 Comments", regular: 200 },
-            { name: "500 Comments", regular: 500 }
+            { name: "10 Comments", regular: 10 }, { name: "20 Comments", regular: 20 },
+            { name: "30 Comments", regular: 30 }, { name: "50 Comments", regular: 50 },
+            { name: "75 Comments", regular: 75 }, { name: "100 Comments", regular: 100 },
+            { name: "200 Comments", regular: 200 }, { name: "500 Comments", regular: 500 }
         ]}
     };
 
@@ -365,7 +328,6 @@
         startLiveTicker();
     }
 
-    // LOAD USER DATA BASED ON PHONE
     function loadUserData() {
         let phone = localStorage.getItem('AYAN_PHONE');
         if(phone) {
@@ -373,7 +335,6 @@
             currentUser.name = userData.name || "Guest";
             currentUser.phone = phone;
             currentUser.pic = userData.pic || "https://i.ibb.co/3kbcw0g/user-placeholder.png";
-            
             updateUI();
         }
     }
@@ -381,7 +342,6 @@
     function updateUI() {
         document.getElementById('header-name').innerText = currentUser.name;
         document.getElementById('header-pic').src = currentUser.pic;
-        
         let history = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
         let spent = history.reduce((a, b) => a + parseInt(b.price), 0);
         document.getElementById('stat-spend').innerText = spent;
@@ -389,14 +349,10 @@
     }
 
     function sendOTP() {
-        let name = document.getElementById('regName').value;
-        let phone = document.getElementById('regPhone').value;
-        if(name.length < 3 || phone.length < 10) { alert("Invalid details"); return; }
-        
-        // Save temporary
-        sessionStorage.setItem('TEMP_NAME', name);
-        sessionStorage.setItem('TEMP_PHONE', phone);
-
+        let n = document.getElementById('regName').value;
+        let p = document.getElementById('regPhone').value;
+        if(n.length < 3 || p.length < 10) return alert("Invalid details");
+        sessionStorage.setItem('TEMP_NAME', n); sessionStorage.setItem('TEMP_PHONE', p);
         document.getElementById('login-step-1').style.display = 'none';
         document.getElementById('login-step-2').style.display = 'block';
         setTimeout(() => { document.getElementById('otpInput').value = Math.floor(1000 + Math.random() * 9000); }, 1500);
@@ -406,41 +362,24 @@
         if(document.getElementById('otpInput').value.length === 4) {
             let name = sessionStorage.getItem('TEMP_NAME');
             let phone = sessionStorage.getItem('TEMP_PHONE');
-            
             localStorage.setItem('AYAN_LOGIN', 'true');
             localStorage.setItem('AYAN_PHONE', phone);
             
-            // Check if user exists, else create
             let userData = JSON.parse(localStorage.getItem(`USER_${phone}_DATA`) || "{}");
             if(!userData.name) {
                 userData = { name: name, pic: "https://i.ibb.co/3kbcw0g/user-placeholder.png" };
                 localStorage.setItem(`USER_${phone}_DATA`, JSON.stringify(userData));
             }
-            
             document.getElementById('loginModal').style.display = 'none';
             loadUserData();
         }
-    }
-
-    function doLogout() { 
-        localStorage.removeItem('AYAN_LOGIN'); 
-        location.reload(); 
-    }
-
-    // PROFILE EDIT
-    function openEditProfile() {
-        document.getElementById('profileModal').style.display = 'none';
-        document.getElementById('edit-name').value = currentUser.name;
-        document.getElementById('editProfileModal').style.display = 'flex';
     }
 
     function saveProfile() {
         let name = document.getElementById('edit-name').value;
         let file = document.getElementById('edit-pic-file').files[0];
         let userData = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_DATA`) || "{}");
-        
         if(name) userData.name = name;
-        
         if(file) {
             let reader = new FileReader();
             reader.onload = function(e) {
@@ -455,21 +394,10 @@
         }
     }
 
-    function openProfile() {
-        document.getElementById('dash-name').innerText = currentUser.name;
-        document.getElementById('dash-phone').innerText = "+91 " + currentUser.phone;
-        document.getElementById('dash-pic').src = currentUser.pic;
-        document.getElementById('dash-orders').innerText = document.getElementById('stat-orders').innerText;
-        document.getElementById('dash-spent').innerText = "₹" + document.getElementById('stat-spend').innerText;
-        document.getElementById('profileModal').style.display = 'flex';
-    }
-
-    // SERVICES & 30% DISCOUNT LOGIC
     function loadService(key) {
         let data = servicesData[key];
         currentOrder.service = data.title;
         currentOrder.type = data.type;
-        
         document.getElementById('main-menu').style.display = 'none';
         document.querySelector('.stats-card').style.display = 'none';
         document.querySelector('.live-activity').style.display = 'none';
@@ -477,7 +405,6 @@
         document.getElementById('service-container').style.display = 'block';
         document.getElementById('sec-title').innerText = data.title;
         
-        // CHECK IF USER HAS ORDERED BEFORE
         let history = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
         let isFirstTime = (history.length === 0);
 
@@ -485,24 +412,15 @@
         data.plans.forEach(plan => {
             let finalPrice = plan.regular;
             let displayPrice = `<span class="price">₹${finalPrice}</span>`;
-
-            // APPLY 30% DISCOUNT ONLY FOR FOLLOWERS & FIRST ORDER
             if(key === 'followers' && isFirstTime) {
-                finalPrice = Math.round(plan.regular * 0.7); // 30% OFF
+                finalPrice = Math.round(plan.regular * 0.7); 
                 displayPrice = `<span class="old-price">₹${plan.regular}</span> <span class="price">₹${finalPrice}</span>`;
             }
-
-            html += `<div class="card">
-                <div class="plan-name">${plan.name}</div>
-                <div style="text-align:right;">${displayPrice}</div>
-                <button class="buy-btn" onclick="initOrder('${plan.name}', ${finalPrice})">BUY</button>
-            </div>`;
+            html += `<div class="card"><div class="plan-name">${plan.name}</div><div style="text-align:right;">${displayPrice}</div><button class="buy-btn" onclick="initOrder('${plan.name}', ${finalPrice})">BUY</button></div>`;
         });
         document.getElementById('plans-list').innerHTML = html;
     }
 
-    function goHome() { location.reload(); }
-    
     function initOrder(plan, price) {
         currentOrder.plan = plan; currentOrder.price = price;
         document.getElementById('step-link').style.display = 'block';
@@ -512,51 +430,27 @@
         document.getElementById('inputLink').placeholder = currentOrder.type === 'profile' ? "@username" : "https://instagram.com/...";
     }
 
-    function goToPay() {
-        currentOrder.link = document.getElementById('inputLink').value;
-        if(currentOrder.link.length < 3) return;
-        document.getElementById('step-link').style.display = 'none';
-        document.getElementById('step-pay').style.display = 'block';
-        document.getElementById('pay-amt').innerText = currentOrder.price;
-    }
-
-    function checkUTR() {
-        let v = document.getElementById('utr').value;
-        let btn = document.getElementById('final-btn');
-        let err = document.getElementById('utr-error');
-        if (/^\d{12}$/.test(v)) { btn.disabled = false; btn.style.background = "#22c55e"; btn.style.color = "black"; err.style.display = "none"; } 
-        else { btn.disabled = true; btn.style.background = "#333"; btn.style.color = "#777"; err.style.display = "block"; }
-    }
-
     function submitOrder() {
         let btn = document.getElementById('final-btn'); btn.innerText = "Processing...";
+        let form = document.getElementById('orderForm');
         document.getElementById('f_service').value = currentOrder.service;
         document.getElementById('f_plan').value = currentOrder.plan;
         document.getElementById('f_price').value = "₹" + currentOrder.price;
-        document.getElementById('f_link').value = currentOrder.link;
+        document.getElementById('f_link').value = document.getElementById('inputLink').value;
         document.getElementById('f_name').value = currentUser.name;
         document.getElementById('f_phone').value = currentUser.phone;
         document.getElementById('f_utr').value = document.getElementById('utr').value;
 
-        let form = document.getElementById('orderForm');
         fetch(form.action, { method: "POST", body: new FormData(form) }).then(res => {
             if(res.ok) {
                 let obj = { 
-                    id: Math.floor(Math.random() * 900000) + 100000, 
-                    plan: currentOrder.plan, 
-                    price: currentOrder.price, 
-                    service: currentOrder.service, 
-                    date: new Date().toLocaleString(), 
-                    link: currentOrder.link 
+                    id: Math.floor(Math.random() * 900000) + 100000, plan: currentOrder.plan, price: currentOrder.price, 
+                    service: currentOrder.service, date: new Date().toLocaleString(), link: document.getElementById('inputLink').value 
                 };
-                
-                // SAVE HISTORY PER USER
-                let historyKey = `USER_${currentUser.phone}_HIST`;
-                let history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+                let history = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
                 history.push(obj);
-                localStorage.setItem(historyKey, JSON.stringify(history));
+                localStorage.setItem(`USER_${currentUser.phone}_HIST`, JSON.stringify(history));
                 
-                // PLAY SOUND
                 let audio = document.getElementById('successAudio');
                 if(audio) audio.play().catch(e=>console.log(e));
                 
@@ -569,7 +463,6 @@
         document.getElementById('processModal').style.display = 'none';
         document.getElementById('historyModal').style.display = 'none';
         document.getElementById('success-screen').style.display = 'flex';
-        
         document.getElementById('ss-id').innerText = "#" + order.id;
         document.getElementById('ss-plan').innerText = order.plan;
         document.getElementById('ss-mobile').innerText = currentUser.phone;
@@ -577,49 +470,63 @@
         document.getElementById('ss-time').innerText = order.date;
     }
 
-    // SHARE FIX
+    function openProfile() {
+        document.getElementById('dash-name').innerText = currentUser.name;
+        document.getElementById('dash-phone').innerText = "+91 " + currentUser.phone;
+        document.getElementById('dash-pic').src = currentUser.pic;
+        let history = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
+        let spent = history.reduce((a, b) => a + parseInt(b.price), 0);
+        document.getElementById('dash-orders').innerText = history.length;
+        document.getElementById('dash-spent').innerText = "₹" + spent;
+        document.getElementById('profileModal').style.display = 'flex';
+    }
+
     function shareReceipt() {
         let text = `ORDER RECEIPT\nID: ${document.getElementById('ss-id').innerText}\nService: ${document.getElementById('ss-plan').innerText}\nPaid: ${document.getElementById('ss-price').innerText}\nStatus: Successful`;
-        
-        if (navigator.share) {
-            navigator.share({ title: 'InstaBoost Receipt', text: text }).catch(() => copyToClipboard(text));
-        } else {
-            copyToClipboard(text);
-        }
+        if (navigator.share) { navigator.share({ title: 'InstaBoost Receipt', text: text }).catch(() => copyToClipboard(text)); } 
+        else { copyToClipboard(text); }
+    }
+    function copyToClipboard(text) { navigator.clipboard.writeText(text).then(() => alert("Receipt Details Copied!")); }
+
+    function checkUTR() {
+        let v = document.getElementById('utr').value;
+        let btn = document.getElementById('final-btn');
+        if(/^\d{12}$/.test(v)) { btn.disabled = false; btn.style.background = "#22c55e"; btn.style.color = "black"; document.getElementById('utr-error').style.display = 'none'; } 
+        else { btn.disabled = true; btn.style.background = "#333"; btn.style.color = "#777"; document.getElementById('utr-error').style.display = 'block'; }
     }
 
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => alert("Receipt copied to clipboard!"));
-    }
-
-    function openHistory() {
-        document.getElementById('historyModal').style.display = 'flex';
+    function openEditProfile() { document.getElementById('profileModal').style.display='none'; document.getElementById('edit-name').value=currentUser.name; document.getElementById('editProfileModal').style.display='flex'; }
+    function openHistory() { 
+        document.getElementById('historyModal').style.display = 'flex'; 
         let list = document.getElementById('history-list'); list.innerHTML = "";
-        let history = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
-        
-        if(history.length === 0) list.innerHTML = "<div style='padding:20px;text-align:center;color:#888;'>No orders yet</div>";
-        
-        history.reverse().forEach(o => {
+        let hist = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
+        if(hist.length === 0) list.innerHTML = "<div style='padding:20px;text-align:center;color:#888;'>No orders yet</div>";
+        hist.reverse().forEach(o => {
             let item = document.createElement('div'); item.className = 'hist-item';
             item.onclick = function() { showReceipt(o); };
             item.innerHTML = `<div><div style="font-weight:bold; color:white;">${o.plan}</div><div style="font-size:11px; color:#777;">${o.date}</div></div><div style="color:#22c55e; font-weight:bold;">₹${o.price}</div>`;
             list.appendChild(item);
         });
     }
-
     function startLiveTicker() {
-        const users = ["@rohan_x", "@priya_doll", "@gamer_1", "@amit_cool", "@king_srk", "@angel_p"];
-        const actions = ["ordered 100 Followers", "bought 500 Likes", "started Reel Views", "ordered 1000 Followers"];
+        const users = ["@rohan_x", "@priya_doll", "@gamer_1", "@amit_cool", "@king_srk"];
         setInterval(() => {
             let u = users[Math.floor(Math.random() * users.length)];
-            let a = actions[Math.floor(Math.random() * actions.length)];
-            document.getElementById('live-ticker').innerText = `${u} ${a} just now...`;
+            document.getElementById('live-ticker').innerText = `${u} ordered 100 Followers just now...`;
         }, 3000);
     }
-
+    function goHome() { location.reload(); }
     function closeSuccess() { location.reload(); }
     function closeProcess() { document.getElementById('processModal').style.display = 'none'; }
     function openHelp() { window.location.href = "https://ig.me/m/insta.boost._in"; }
+    function doLogout() { localStorage.removeItem('AYAN_LOGIN'); location.reload(); }
+    function goToPay() {
+        if(document.getElementById('inputLink').value.length < 3) return;
+        document.getElementById('step-link').style.display = 'none';
+        document.getElementById('step-pay').style.display = 'block';
+        document.getElementById('pay-amt').innerText = currentOrder.price;
+    }
+    function goToVerify() { document.getElementById('step-pay').style.display = 'none'; document.getElementById('step-verify').style.display = 'block'; }
     function forcePay(app) {
         let url = `upi://pay?pa=${upiID}&am=${currentOrder.price}&cu=INR`;
         if(app === 'gpay') url = `tez://upi/pay?pa=${upiID}&am=${currentOrder.price}&cu=INR`;
@@ -631,7 +538,6 @@
         document.getElementById('dynamic-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${upiID}&am=${currentOrder.price}&cu=INR`)}`;
     }
     function copyID() { navigator.clipboard.writeText(upiID); alert("Copied"); }
-    function goToVerify() { document.getElementById('step-pay').style.display = 'none'; document.getElementById('step-verify').style.display = 'block'; }
 </script>
 
 </body>
