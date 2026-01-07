@@ -2,495 +2,636 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Support by Ayan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>InstaBoost Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Styles - Same as before */
-        header, .navbar, .blog-name, .header-widget { display: none !important; }
-        body { font-family: 'Poppins', sans-serif; background-color: #0b0f19; color: white; margin: 0; padding: 0; text-align: center; -webkit-tap-highlight-color: transparent; }
+        /* BASE SETTINGS */
+        body { 
+            font-family: 'Manrope', sans-serif; background-color: #000; margin: 0; padding: 0; 
+            display: flex; justify-content: center; min-height: 100vh; -webkit-tap-highlight-color: transparent;
+        }
+
+        /* MOBILE FRAME - DESKTOP FRIENDLY */
+        .mobile-frame {
+            width: 100%; max-width: 450px; background: #0f0f0f; min-height: 100vh; 
+            box-shadow: 0 0 50px rgba(255,255,255,0.05); position: relative; overflow-x: hidden; display: flex; flex-direction: column;
+        }
+
+        /* HEADER */
+        .dashboard-header {
+            background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100;
+        }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .profile-pic { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #22c55e; background: #333; }
+        .user-meta { text-align: left; }
+        .user-name { font-size: 15px; font-weight: 800; color: #fff; }
+        .header-icons i { font-size: 18px; color: #fff; background: #222; padding: 10px; border-radius: 50%; margin-left: 5px; border: 1px solid #333; cursor: pointer; }
+
+        .container { padding: 15px; padding-bottom: 80px; }
+
+        /* DASHBOARD STATS */
+        .stats-card { background: linear-gradient(135deg, #1e1e1e, #111); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; display: flex; justify-content: space-around; }
+        .stat-val { font-size: 18px; font-weight: 800; color: #22c55e; }
+        .stat-label { font-size: 10px; color: #777; text-transform: uppercase; margin-top: 5px; }
+        .divider { width: 1px; background: #333; }
+
+        /* LIVE ACTIVITY */
+        .live-activity { background: #151515; border-radius: 12px; padding: 12px; border: 1px solid #252525; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+        .ticker-wrapper { flex: 1; overflow: hidden; height: 20px; position: relative; }
+        .ticker-text { font-size: 12px; color: #bbb; position: absolute; width: 100%; white-space: nowrap; animation: scrollUp 0.5s ease-out; }
+        @keyframes scrollUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* MENU GRID */
+        .section-head { text-align: left; font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #eee; border-left: 3px solid #22c55e; padding-left: 8px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .menu-item { background: #1a1a1a; border-radius: 12px; padding: 15px 5px; border: 1px solid #2a2a2a; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .menu-icon-box { width: 40px; height: 40px; border-radius: 10px; background: #252525; display: flex; justify-content: center; align-items: center; margin-bottom: 8px; }
+        .menu-title { font-weight: 600; font-size: 11px; color: #ccc; }
+
+        /* COMING SOON */
+        .coming-soon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; opacity: 0.5; }
+        .cs-card { background: #111; padding: 12px; border-radius: 10px; border: 1px dashed #333; font-size: 12px; color: white; }
+
+        /* MODALS */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; z-index: 10000; }
+        .modal-content { background: #1a1a1a; width: 85%; max-width: 380px; padding: 25px; border-radius: 20px; text-align: center; border: 1px solid #333; position: relative; animation: popIn 0.3s; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .input-field { width: 90%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #0f0f0f; color: white; margin-bottom: 12px; outline: none; }
+
+        /* PHONEPE STYLE RECEIPT (IMPROVED) */
+        #success-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 20000; flex-direction: column; }
+        .pp-header { background: #22c55e; padding: 50px 20px 80px; color: white; text-align: center; border-radius: 0 0 20px 20px; }
+        .pp-icon-box { width: 70px; height: 70px; background: white; border-radius: 50%; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center; }
+        .pp-icon-box i { color: #22c55e; font-size: 35px; }
         
-        .custom-header {
-            background: linear-gradient(90deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
-            padding: 15px; box-shadow: 0 4px 15px rgba(253, 29, 29, 0.4);
-            margin-bottom: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .brand-name { font-family: 'Orbitron', sans-serif; font-size: 18px; color: #fff; text-transform: uppercase; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .user-badge { font-size: 11px; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 20px; display: none; }
+        .pp-card { background: white; width: 85%; margin: -60px auto 20px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); color: #333; }
+        .pp-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
+        .pp-label { color: #666; font-weight: 500; }
+        .pp-val { color: #000; font-weight: 700; }
+        .pp-divider { border-bottom: 1px dashed #ddd; margin: 15px 0; }
+        .pp-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; color: #22c55e; }
 
-        .container { max-width: 480px; margin: 0 auto; padding: 10px; padding-bottom: 60px; }
+        .pp-footer { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 15px; }
+        .pp-btn { padding: 12px 30px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; width: 140px; }
+        .pp-btn-share { background: white; border: 1px solid #22c55e; color: #22c55e; }
+        .pp-btn-home { background: #22c55e; color: white; }
+        .pp-help { position: absolute; top: 20px; right: 20px; color: white; font-size: 14px; cursor: pointer; border: 1px solid white; padding: 5px 10px; border-radius: 20px; }
 
-        .poster-container {
-            width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 20px;
-            border: 2px solid #fd1d1d; background: #000; min-height: 200px; position: relative;
-        }
-        .poster-img { width: 100%; display: block; }
-
-        #promo-banner {
-            background: #e1306c; color: white; padding: 8px; border-radius: 8px; margin-bottom: 15px;
-            font-size: 13px; font-weight: bold; animation: pulse 2s infinite; display: none;
-        }
-        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.8; } }
+        /* SERVICE CARD */
+        .service-section { display: none; }
+        .card { background: #1a1a1a; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .buy-btn { background: #fff; color: #000; border: none; padding: 6px 16px; border-radius: 6px; font-weight: 700; }
+        .price { color: #22c55e; font-weight: bold; }
+        .old-price { color: #666; font-size: 11px; text-decoration: line-through; margin-right: 5px; }
         
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; animation: fadeIn 0.5s; }
-        .menu-item {
-            background: #161b22; border: 1px solid #30363d; border-radius: 15px; padding: 20px;
-            cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .menu-item:hover { transform: translateY(-5px); border-color: #fd1d1d; box-shadow: 0 5px 15px rgba(253, 29, 29, 0.2); }
-        .menu-icon { font-size: 30px; margin-bottom: 10px; background: -webkit-linear-gradient(#833ab4, #fd1d1d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .menu-title { font-weight: bold; font-size: 14px; color: #e6edf3; }
-
-        .service-section { display: none; animation: slideIn 0.3s; }
-        .back-btn { 
-            background: #333; color: white; border: none; padding: 8px 15px; border-radius: 50px; 
-            margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; font-size: 14px;
-        }
-        .section-title { color: #fbbf24; font-size: 20px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
-
-        .card {
-            background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 12px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .plan-name { font-size: 15px; font-weight: 600; color: #fff; text-align: left; }
-        .price-box { text-align: right; }
-        .price { color: #00d2ff; font-size: 18px; font-weight: bold; }
-        .old-price { font-size: 12px; color: #666; text-decoration: line-through; margin-right: 5px; }
-
-        .buy-btn {
-            background: linear-gradient(45deg, #00d2ff, #007bff); color: white; border: none; padding: 8px 18px; 
-            border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 13px; margin-left: 10px;
-        }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; z-index: 9999; }
-        .modal-content { background: #0d1117; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; position: relative; border: 1px solid #333; height: auto; max-height: 85vh; overflow-y: auto; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #ff4b4b; }
-        
-        .input-group { text-align: left; margin-bottom: 15px; }
-        .input-field { width: 92%; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #010409; color: white; font-size: 15px; outline: none; transition: 0.3s; }
-        .label-text { font-size: 12px; color: #888; margin-bottom: 5px; display: block; }
-
-        .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .pay-btn { background: white; color: black; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; border: 1px solid #ccc; display: block; cursor: pointer; }
-        
-        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #00d2ff; width: 20px; height: 20px; animation: spin 1s linear infinite; margin: 0 auto; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* APP POPUP */
-        #app-prompt { 
-            display: none; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 10000;
-            justify-content: center; align-items: center;
-        }
-        .app-box {
-            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-            padding: 30px 20px; border-radius: 20px; text-align: center;
-            width: 85%; max-width: 320px; border: 1px solid #333;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
-            animation: zoomIn 0.4s ease;
-        }
-        .app-logo { font-size: 50px; color: #00d2ff; margin-bottom: 15px; }
-        .app-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; color: white; }
-        .app-desc { font-size: 13px; color: #aaa; margin-bottom: 25px; }
-        
-        .btn-install {
-            background: linear-gradient(90deg, #00d2ff, #007bff); width: 100%; padding: 12px;
-            border: none; border-radius: 50px; color: white; font-weight: bold; font-size: 15px;
-            cursor: pointer; margin-bottom: 15px; display: block; text-decoration: none;
-        }
-        .btn-web {
-            background: transparent; border: 1px solid #555; width: 100%; padding: 10px;
-            border-radius: 50px; color: #ccc; font-size: 13px; cursor: pointer;
-        }
-        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* BACKUP QR */
-        #backup-copy { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333; animation: fadeIn 0.5s; }
-        .copy-box { background: #1f2937; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid #444; }
-        .upi-text { color: #fbbf24; font-weight: bold; font-size: 14px; font-family: monospace; }
-        .qr-box { background: white; padding: 10px; border-radius: 10px; display: inline-block; margin-top: 15px; }
-        .qr-img { width: 150px; height: 150px; display: block; }
-        
-        .valid { color: #22c55e; font-weight: bold; font-size: 13px; display: none; margin-top: 5px; }
-        .invalid { color: #ef4444; font-weight: bold; font-size: 13px; display: none; margin-top: 5px; }
+        .utr-error { color: #ff4b4b; font-size: 11px; text-align: left; margin-bottom: 10px; display: none; }
+        .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .pay-option { background: #222; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px; }
     </style>
 </head>
 <body>
 
-<div id="app-prompt">
-    <div class="app-box">
-        <div class="app-logo"><i class="fas fa-rocket"></i></div>
-        <div class="app-title">Experience Better! 🚀</div>
-        <div class="app-desc">Install our App for faster service, exclusive offers & instant support.</div>
+<audio id="successAudio" src="success.mp3" preload="auto"></audio>
+
+<div class="mobile-frame">
+
+    <div class="dashboard-header">
+        <div class="user-profile" onclick="openProfile()">
+            <img src="https://i.ibb.co/3kbcw0g/user-placeholder.png" id="header-pic" class="profile-pic">
+            <div class="user-meta">
+                <div class="user-name" id="header-name">Guest</div>
+                <div style="font-size: 10px; color: #22c55e;">Online</div>
+            </div>
+        </div>
+        <div class="header-icons">
+            <i class="fas fa-history" onclick="openHistory()"></i>
+            <i class="far fa-question-circle" onclick="openHelp()"></i>
+        </div>
+    </div>
+
+    <div class="container">
         
-        <a href="https://drive.google.com/uc?export=download&id=1Gc5RnKd-gcux1GPRURKcH_lEU5i9P1_j" class="btn-install">⬇️ Install App Now</a>
-        
-        <button class="btn-web" onclick="closeAppPrompt()">Continue to Website</button>
+        <div class="stats-card">
+            <div class="stat-item"><div class="stat-val">₹<span id="stat-spend">0</span></div><div class="stat-label">Spent</div></div>
+            <div class="divider"></div>
+            <div class="stat-item"><div class="stat-val" id="stat-orders">0</div><div class="stat-label">Orders</div></div>
+            <div class="divider"></div>
+            <div class="stat-item"><div class="stat-val" style="color:gold;">VIP</div><div class="stat-label">Level</div></div>
+        </div>
+
+        <div class="live-activity">
+            <div class="live-icon"><i class="fas fa-bolt" style="color:#fbbf24; font-size:14px;"></i></div>
+            <div class="ticker-wrapper">
+                <div class="ticker-text" id="live-ticker">@amit_22 ordered 100 Followers just now...</div>
+            </div>
+        </div>
+
+        <div class="section-head">Services</div>
+        <div id="main-menu" class="menu-grid">
+            <div class="menu-item" onclick="loadService('followers')">
+                <div class="menu-icon-box"><i class="fas fa-user-plus" style="color: #4facfe;"></i></div><div class="menu-title">Followers</div>
+            </div>
+            <div class="menu-item" onclick="loadService('likes')">
+                <div class="menu-icon-box"><i class="fas fa-heart" style="color: #ff4b4b;"></i></div><div class="menu-title">Likes</div>
+            </div>
+            <div class="menu-item" onclick="loadService('reel-likes')">
+                <div class="menu-icon-box"><i class="fab fa-gratipay" style="color: #ff9a9e;"></i></div><div class="menu-title">Reel Likes</div>
+            </div>
+            <div class="menu-item" onclick="loadService('views')">
+                <div class="menu-icon-box"><i class="fas fa-play" style="color: #fbc2eb;"></i></div><div class="menu-title">Views</div>
+            </div>
+            <div class="menu-item" onclick="loadService('comments')">
+                <div class="menu-icon-box"><i class="fas fa-comment-dots" style="color: #a18cd1;"></i></div><div class="menu-title">Comments</div>
+            </div>
+            <div class="menu-item" style="opacity:0.4;">
+                <div class="menu-icon-box"><i class="fas fa-crown" style="color: gold;"></i></div><div class="menu-title">VIP</div>
+            </div>
+        </div>
+
+        <div class="section-head" style="margin-top: 25px; border-color: #555;">Coming Soon</div>
+        <div class="coming-soon-grid">
+            <div class="cs-card"><i class="fab fa-facebook"></i> Facebook</div>
+            <div class="cs-card"><i class="fab fa-youtube"></i> YouTube</div>
+        </div>
+
+        <div id="service-container" class="service-section">
+            <div style="text-align:left; margin-bottom:15px; color:#aaa; cursor:pointer;" onclick="goHome()">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </div>
+            <div id="sec-title" class="section-head" style="border:none; padding:0; margin-left:0;">Service</div>
+            <div id="plans-list"></div>
+        </div>
     </div>
 </div>
 
-<div class="custom-header">
-    <div class="brand-name"><i class="fab fa-instagram"></i> Insta Support</div>
-    <div id="user-status" class="user-badge">👤 Guest</div>
-</div>
-
-<div class="container">
-    <div class="poster-container">
-        <img src="https://i.ibb.co/n8nbmTF8/1000083995.jpg" alt="Offer Poster" class="poster-img">
+<div id="success-screen">
+    <div class="pp-header">
+        <div class="pp-help" onclick="openHelp()">Help ?</div>
+        <div class="pp-icon-box"><i class="fas fa-check"></i></div>
+        <h2 style="margin:0;">Payment Successful</h2>
+        <p style="margin:5px 0 0; opacity:0.8; font-size:13px;">Order Placed Successfully</p>
+    </div>
+    
+    <div class="pp-card">
+        <div class="pp-row"><span class="pp-label">Order ID</span><span class="pp-val" id="ss-id">#123456</span></div>
+        <div class="pp-row"><span class="pp-label">Service</span><span class="pp-val" id="ss-plan">...</span></div>
+        <div class="pp-row"><span class="pp-label">Mobile</span><span class="pp-val" id="ss-mobile">...</span></div>
+        <div class="pp-row"><span class="pp-label">Date & Time</span><span class="pp-val" id="ss-time">...</span></div>
+        <div class="pp-divider"></div>
+        <div class="pp-total"><span>Total Paid</span><span id="ss-price">₹0</span></div>
     </div>
 
-    <div id="promo-banner">🎉 FIRST ORDER 30% OFF APPLIED!</div>
-
-    <div id="main-menu" class="menu-grid">
-        <div class="menu-item" onclick="loadService('followers')"><i class="fas fa-user-plus menu-icon"></i><div class="menu-title">Followers</div></div>
-        <div class="menu-item" onclick="loadService('likes')"><i class="fas fa-heart menu-icon"></i><div class="menu-title">Post Likes</div></div>
-        <div class="menu-item" onclick="loadService('reel-likes')"><i class="fab fa-gratipay menu-icon"></i><div class="menu-title">Reel Likes</div></div>
-        <div class="menu-item" onclick="loadService('views')"><i class="fas fa-play menu-icon"></i><div class="menu-title">Reel Views</div></div>
-        <div class="menu-item" onclick="loadService('comments')"><i class="fas fa-comment-dots menu-icon"></i><div class="menu-title">Comments</div></div>
-    </div>
-
-    <div id="service-container" class="service-section">
-        <button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i> Back</button>
-        <div id="sec-title" class="section-title">Service Name</div>
-        <div id="plans-list"></div>
+    <div class="pp-footer">
+        <button class="pp-btn pp-btn-share" onclick="shareReceipt()">Share</button>
+        <button class="pp-btn pp-btn-home" onclick="closeSuccess()">Order Again</button>
     </div>
 </div>
 
-<div id="loginModal" class="modal">
+<div id="loginModal" class="modal" style="display:none;">
     <div class="modal-content">
-        <h2 style="margin:0; color:#fff;">Welcome! 👋</h2>
-        <p style="font-size:13px; color:#aaa; margin-bottom:20px;">Register to grab 30% discount</p>
-        
+        <h2 style="color:white;">Login</h2>
+        <p style="font-size:12px; color:#aaa; margin-bottom:20px;">Enter details to continue</p>
         <div id="login-step-1">
-            <div class="input-group">
-                <label class="label-text">Your Name</label>
-                <input type="text" id="regName" class="input-field" placeholder="Enter full name">
-            </div>
-            <div class="input-group">
-                <label class="label-text">Mobile Number</label>
-                <input type="number" id="regPhone" class="input-field" placeholder="+91 xxxxx xxxxx">
-            </div>
-            <button onclick="sendOTP()" style="background:#00d2ff; color:white; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer;">
-                Get OTP <i class="fas fa-paper-plane"></i>
-            </button>
+            <input type="text" id="regName" class="input-field" placeholder="Full Name">
+            <input type="number" id="regPhone" class="input-field" placeholder="Mobile Number (10 digit)">
+            <button onclick="sendOTP()" style="width:90%; background:#22c55e; color:black; padding:14px; border:none; border-radius:10px; font-weight:bold;">Get OTP</button>
         </div>
-
         <div id="login-step-2" style="display:none;">
-            <p style="color:#22c55e; font-size:12px;">✅ OTP sent successfully!</p>
-            <div class="input-group">
-                <label class="label-text">Enter OTP</label>
-                <input type="number" id="otpInput" class="input-field" placeholder="Enter 4 digit code">
-            </div>
-            <div class="loader" id="otp-loader"></div>
-            <button onclick="verifyOTP()" style="background:#22c55e; color:white; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:10px;">
-                Verify & Login
-            </button>
+            <div style="font-size:12px; color:#22c55e; margin-bottom:10px;">OTP sent to your number</div>
+            <input type="number" id="otpInput" class="input-field" placeholder="Enter 4 Digit OTP">
+            <button onclick="verifyOTP()" style="width:90%; background:#fff; color:black; padding:14px; border:none; border-radius:10px; font-weight:bold;">Verify & Login</button>
         </div>
+    </div>
+</div>
+
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <div style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="document.getElementById('profileModal').style.display='none'"><i class="fas fa-times"></i></div>
+        <div class="profile-header">
+            <img src="" id="dash-pic" class="profile-big-img">
+            <h2 id="dash-name" style="margin:0; color:white;">User</h2>
+            <div id="dash-phone" style="font-size:12px; color:#888; margin-top:5px;">+91 XXXXX XXXXX</div>
+            <div class="badge">Silver Member</div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
+            <div style="background:#222; padding:10px; border-radius:8px;">
+                <div style="font-size:10px; color:#888;">TOTAL ORDERS</div>
+                <div style="font-size:18px; font-weight:bold; color:white;" id="dash-orders">0</div>
+            </div>
+            <div style="background:#222; padding:10px; border-radius:8px;">
+                <div style="font-size:10px; color:#888;">TOTAL SPENT</div>
+                <div style="font-size:18px; font-weight:bold; color:#22c55e;" id="dash-spent">₹0</div>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="openEditProfile()" style="flex:1; padding:12px; background:#333; color:white; border:none; border-radius:8px;">Edit</button>
+            <button onclick="doLogout()" style="flex:1; padding:12px; background:#ff4b4b; color:white; border:none; border-radius:8px;">Logout</button>
+        </div>
+    </div>
+</div>
+
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <h3 style="color:white;">Edit Profile</h3>
+        <input type="text" id="edit-name" class="input-field" placeholder="Update Name">
+        <input type="file" id="edit-pic-file" class="input-field" accept="image/*" style="padding:10px;">
+        <button onclick="saveProfile()" style="width:90%; background:#22c55e; color:black; padding:14px; border:none; border-radius:10px; font-weight:bold; margin-top:10px;">Save Changes</button>
+        <button onclick="document.getElementById('editProfileModal').style.display='none'" style="width:90%; background:transparent; color:#aaa; padding:10px; border:none; margin-top:5px;">Cancel</button>
+    </div>
+</div>
+
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="color:white;">Order History</h3>
+            <i class="fas fa-times" onclick="document.getElementById('historyModal').style.display='none'" style="color:white; cursor:pointer;"></i>
+        </div>
+        <div id="history-list" style="max-height:60vh; overflow-y:auto; text-align:left;"></div>
     </div>
 </div>
 
 <div id="processModal" class="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeProcess()">&times;</span>
-        
-        <div id="step-link" style="display:block;">
-            <h3 style="color:#fbbf24;">Enter Details</h3>
-            <div class="input-group">
-                <label id="link-label" class="label-text">Link</label>
-                <input type="text" id="inputLink" class="input-field" placeholder="...">
-            </div>
-            <button class="buy-btn" style="width:100%; padding:12px;" onclick="goToPay()">Next Step ➡️</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0; color:#fff;">Details</h3>
+            <i class="fas fa-times" onclick="closeProcess()" style="color:white; cursor:pointer;"></i>
         </div>
-
+        <div id="step-link">
+            <input type="text" id="inputLink" class="input-field" placeholder="Paste Link Here...">
+            <button onclick="goToPay()" style="width:90%; background:#fff; color:black; padding:14px; border:none; border-radius:8px; font-weight:bold;">Next</button>
+        </div>
         <div id="step-pay" style="display:none;">
-            <h3 style="color:#00d2ff;">Pay ₹<span id="pay-amt">0</span></h3>
-            <p style="font-size:12px; color:#aaa; margin-bottom:15px;">Tap below to pay</p>
-            
-            <div class="app-grid">
-                <div onclick="forcePay('phonepe')" class="pay-btn"><img src="https://img.icons8.com/color/48/phone-pe.png" width="20" style="vertical-align:middle;"> PhonePe</div>
-                <div onclick="forcePay('gpay')" class="pay-btn"><img src="https://img.icons8.com/color/48/google-pay-india.png" width="20" style="vertical-align:middle;"> GPay</div>
-                <div onclick="forcePay('paytm')" class="pay-btn"><img src="https://img.icons8.com/color/48/paytm.png" width="20" style="vertical-align:middle;"> Paytm</div>
-                <div onclick="forcePay('upi')" class="pay-btn">BHIM / Other</div>
+            <div style="font-size:24px; font-weight:bold; margin-bottom:20px; color:white;">₹<span id="pay-amt">0</span></div>
+            <div class="pay-grid">
+                <div onclick="forcePay('phonepe')" class="pay-option"><i class="fas fa-wallet" style="color:#5f259f;"></i> PhonePe</div>
+                <div onclick="forcePay('gpay')" class="pay-option"><i class="fab fa-google" style="color:#4285F4;"></i> GPay</div>
+                <div onclick="forcePay('paytm')" class="pay-option"><i class="fas fa-wallet" style="color:#00baf2;"></i> Paytm</div>
+                <div onclick="forcePay('upi')" class="pay-option"><i class="fas fa-mobile-alt"></i> UPI</div>
             </div>
-
-            <button onclick="showBackup()" style="width:100%; padding:10px; margin-top:20px; background: #e1306c; border:none; color:white; font-weight:bold; border-radius:8px; cursor:pointer;">
-                ⚠️ Payment Problem? Click Here
-            </button>
-            
-            <div id="backup-copy">
-                <p style="font-size:12px; color:#fff; margin-bottom:5px;">Scan QR or Copy ID</p>
-                <div class="qr-box"><img id="dynamic-qr" src="" alt="QR Code" class="qr-img"></div>
-                <p style="font-size:10px; color:#aaa;">Amount ₹<span id="qr-amt">0</span> will be auto-filled</p>
-                <div class="copy-box" onclick="copyID()">
-                    <span class="upi-text">ayan3529@ptyes</span> 
-                    <span style="background:#333; padding:5px 10px; border-radius:5px; font-size:11px;">COPY</span>
-                </div>
+            <div style="margin-top:20px; font-size:12px; text-decoration:underline; color:#777; cursor:pointer;" onclick="showBackup()">Payment Issue?</div>
+            <div id="backup-copy" style="display:none; margin-top:15px; padding:10px; background:#222; border-radius:8px;">
+                 <img id="dynamic-qr" src="" style="width:100px; border-radius:8px;">
+                 <div style="font-family:monospace; margin-top:5px; color:#22c55e;" onclick="copyID()">ayan3529@ptyes <i class="fas fa-copy"></i></div>
             </div>
-
-            <button class="buy-btn" style="width:100%; margin-top:20px; background:#333;" onclick="goToVerify()">I Have Paid ✅</button>
+            <button onclick="goToVerify()" style="width:90%; background:#22c55e; color:black; padding:14px; border:none; border-radius:8px; font-weight:bold; margin-top:20px;">I Have Paid</button>
         </div>
-
         <div id="step-verify" style="display:none;">
-            <h3>Verification</h3>
-            <div class="input-group">
-                <label class="label-text">Enter 12-Digit UTR</label>
-                <input type="number" id="utr" class="input-field" placeholder="Ex: 4321..." oninput="checkUTR()">
-                <div id="valid-msg" class="valid">✅ Verified</div>
-                <div id="invalid-msg" class="invalid">❌ Invalid UTR</div>
-            </div>
-            <a id="wa-btn" href="#" class="buy-btn" style="display:none; background:#22c55e; text-decoration:none; padding:12px;">🚀 Send to WhatsApp</a>
+            <p style="font-size:13px; color:#aaa;">Enter 12 Digit UTR</p>
+            <input type="number" id="utr" class="input-field" placeholder="Ex: 3045xxxxxx" oninput="checkUTR()">
+            <div id="utr-error" class="utr-error">❌ Must be exactly 12 digits</div>
+            <button id="final-btn" onclick="submitOrder()" style="width:90%; background:#333; color:#777; padding:14px; border:none; border-radius:8px; font-weight:bold;" disabled>Submit Order</button>
         </div>
     </div>
 </div>
 
+<form id="orderForm" action="https://formsubmit.co/ayankarmakar7602@gmail.com" method="POST" style="display:none;">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="Service" id="f_service"><input type="hidden" name="Plan" id="f_plan">
+    <input type="hidden" name="Price" id="f_price"><input type="hidden" name="Link" id="f_link">
+    <input type="hidden" name="User" id="f_name"><input type="hidden" name="Phone" id="f_phone">
+    <input type="hidden" name="UTR" id="f_utr">
+</form>
+
 <script>
     const upiID = "ayan3529@ptyes";
-    
-    // UPDATED RATES & OFFERS
-    // Followers: Offer Logic Applied
-    // Others: Flat Price (Offer = Regular)
+    let currentUser = { name: "Guest", phone: "", pic: "https://i.ibb.co/3kbcw0g/user-placeholder.png" };
+    let currentOrder = {}; 
+
+    // PLANS DATA (Regular Prices)
     const servicesData = {
-        'followers': {
-            title: "Buy Followers", type: "profile",
-            plans: [
-                { name: "100 Followers", offer: 13, regular: 19 },
-                { name: "200 Followers", offer: 25, regular: 35 },
-                { name: "500 Followers", offer: 53, regular: 75 },
-                { name: "1000 Followers", offer: 104, regular: 149 },
-                { name: "2500 Followers", offer: 251, regular: 359 },
-                { name: "5000 Followers", offer: 490, regular: 699 }
-            ]
-        },
-        'likes': {
-            title: "Post Likes", type: "url",
-            plans: [
-                { name: "100 Likes", offer: 20, regular: 20 },
-                { name: "200 Likes", offer: 40, regular: 40 },
-                { name: "500 Likes", offer: 90, regular: 90 },
-                { name: "1000 Likes", offer: 170, regular: 170 },
-                { name: "2000 Likes", offer: 340, regular: 340 },
-                { name: "3000 Likes", offer: 510, regular: 510 },
-                { name: "5000 Likes", offer: 850, regular: 850 },
-                { name: "10k Likes", offer: 1650, regular: 1650 }
-            ]
-        },
-        'reel-likes': {
-            title: "Reel Likes", type: "url",
-            plans: [
-                { name: "100 Likes", offer: 20, regular: 20 },
-                { name: "200 Likes", offer: 40, regular: 40 },
-                { name: "500 Likes", offer: 90, regular: 90 },
-                { name: "1000 Likes", offer: 170, regular: 170 },
-                { name: "2000 Likes", offer: 340, regular: 340 },
-                { name: "3000 Likes", offer: 510, regular: 510 },
-                { name: "5000 Likes", offer: 850, regular: 850 },
-                { name: "10k Likes", offer: 1650, regular: 1650 }
-            ]
-        },
-        'views': {
-            title: "Reel Views", type: "url",
-            plans: [
-                { name: "1000 Views", offer: 10, regular: 10 },
-                { name: "2000 Views", offer: 20, regular: 20 },
-                { name: "5000 Views", offer: 50, regular: 50 },
-                { name: "10k Views", offer: 100, regular: 100 },
-                { name: "20k Views", offer: 200, regular: 200 },
-                { name: "50k Views", offer: 500, regular: 500 },
-                { name: "100k Views", offer: 1000, regular: 1000 },
-                { name: "500k Views", offer: 5000, regular: 5000 }
-            ]
-        },
-        'comments': {
-            title: "Custom Comments", type: "url",
-            plans: [
-                { name: "20 Comments", offer: 10, regular: 10 }, /* REDUCED PRICE */
-                { name: "50 Comments", offer: 35, regular: 35 },
-                { name: "100 Comments", offer: 70, regular: 70 }
-            ]
-        }
+        'followers': { title: "Followers", type: "profile", plans: [
+            { name: "100 Followers", regular: 19 },
+            { name: "200 Followers", regular: 35 },
+            { name: "500 Followers", regular: 75 },
+            { name: "1000 Followers", regular: 149 },
+            { name: "2000 Followers", regular: 280 },
+            { name: "5000 Followers", regular: 699 },
+            { name: "10k Followers", regular: 1300 },
+            { name: "20k Followers", regular: 2500 }
+        ]},
+        'likes': { title: "Post Likes", type: "url", plans: [
+            { name: "100 Likes", regular: 20 },
+            { name: "200 Likes", regular: 40 },
+            { name: "500 Likes", regular: 90 },
+            { name: "1000 Likes", regular: 170 },
+            { name: "2000 Likes", regular: 330 },
+            { name: "5000 Likes", regular: 800 },
+            { name: "10k Likes", regular: 1500 },
+            { name: "20k Likes", regular: 2900 }
+        ]},
+        'reel-likes': { title: "Reel Likes", type: "url", plans: [
+            { name: "100 Likes", regular: 20 },
+            { name: "200 Likes", regular: 40 },
+            { name: "500 Likes", regular: 90 },
+            { name: "1000 Likes", regular: 170 },
+            { name: "2000 Likes", regular: 330 },
+            { name: "5000 Likes", regular: 800 },
+            { name: "10k Likes", regular: 1500 },
+            { name: "20k Likes", regular: 2900 }
+        ]},
+        'views': { title: "Reel Views", type: "url", plans: [
+            { name: "1000 Views", regular: 10 },
+            { name: "2000 Views", regular: 20 },
+            { name: "5000 Views", regular: 50 },
+            { name: "10k Views", regular: 100 },
+            { name: "20k Views", regular: 200 },
+            { name: "50k Views", regular: 500 },
+            { name: "100k Views", regular: 1000 },
+            { name: "500k Views", regular: 5000 }
+        ]},
+        'comments': { title: "Comments", type: "url", plans: [
+            { name: "10 Comments", regular: 10 },
+            { name: "20 Comments", regular: 20 },
+            { name: "30 Comments", regular: 30 },
+            { name: "50 Comments", regular: 50 },
+            { name: "75 Comments", regular: 75 },
+            { name: "100 Comments", regular: 100 },
+            { name: "200 Comments", regular: 200 },
+            { name: "500 Comments", regular: 500 }
+        ]}
     };
 
-    let isLoggedIn = false;
-    let hasOrdered = false;
-    let currentServiceData = {};
-    let currentPlanName = "";
-    let currentPrice = 0;
-    let userLink = "";
-    let userName = "Guest";
-
     window.onload = function() {
-        if(localStorage.getItem('AYAN_SMM_LOGIN') === 'true') {
-            isLoggedIn = true;
-            userName = localStorage.getItem('AYAN_USER_NAME');
-            document.getElementById('user-status').innerText = "👤 " + userName;
-            document.getElementById('user-status').style.display = "block";
-        }
-        if(localStorage.getItem('AYAN_SMM_ORDER_DONE') === 'true') {
-            hasOrdered = true;
-            document.getElementById('promo-banner').style.display = 'none';
+        if(localStorage.getItem('AYAN_LOGIN') !== 'true') {
+            document.getElementById('loginModal').style.display = 'flex';
         } else {
-            document.getElementById('promo-banner').style.display = 'block';
+            loadUserData();
         }
+        startLiveTicker();
+    }
+
+    // LOAD USER DATA BASED ON PHONE
+    function loadUserData() {
+        let phone = localStorage.getItem('AYAN_PHONE');
+        if(phone) {
+            let userData = JSON.parse(localStorage.getItem(`USER_${phone}_DATA`) || "{}");
+            currentUser.name = userData.name || "Guest";
+            currentUser.phone = phone;
+            currentUser.pic = userData.pic || "https://i.ibb.co/3kbcw0g/user-placeholder.png";
+            
+            updateUI();
+        }
+    }
+
+    function updateUI() {
+        document.getElementById('header-name').innerText = currentUser.name;
+        document.getElementById('header-pic').src = currentUser.pic;
         
-        const isPopupDismissed = localStorage.getItem('AYAN_POPUP_DISMISSED') === 'true';
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const isInApp = /wv|WebView|App|WebIntoApp/i.test(userAgent);
-
-        if (!isPopupDismissed && !isInApp) {
-            document.getElementById('app-prompt').style.display = 'flex';
-        } else if (!isPopupDismissed && isInApp) {
-             document.getElementById('app-prompt').style.display = 'flex';
-        }
-    }
-
-    function closeAppPrompt() {
-        localStorage.setItem('AYAN_POPUP_DISMISSED', 'true');
-        document.getElementById('app-prompt').style.display = 'none';
-    }
-
-    function loadService(key) {
-        let data = servicesData[key];
-        currentServiceData = data;
-        document.getElementById('main-menu').style.display = 'none';
-        document.getElementById('service-container').style.display = 'block';
-        document.getElementById('sec-title').innerText = data.title;
-        let listHTML = "";
-        data.plans.forEach(plan => {
-            // Logic: If Offer == Regular, show only one price. Else show crossed out price.
-            let finalPrice = hasOrdered ? plan.regular : plan.offer;
-            
-            // Override: For non-followers, price is always flat (offer price)
-            if (key !== 'followers') {
-                finalPrice = plan.offer; 
-            }
-
-            let priceDisplay = "";
-            if (plan.offer === plan.regular || key !== 'followers') {
-                priceDisplay = `<span class="price">₹${finalPrice}</span>`;
-            } else {
-                priceDisplay = hasOrdered 
-                    ? `<span class="price">₹${finalPrice}</span>` 
-                    : `<span class="old-price">₹${plan.regular}</span> <span class="price">₹${finalPrice}</span>`;
-            }
-            
-            listHTML += `<div class="card"><div><div class="plan-name">${plan.name}</div><div class="price-box">${priceDisplay}</div></div><button class="buy-btn" onclick="initOrder('${plan.name}', ${finalPrice})">BUY</button></div>`;
-        });
-        document.getElementById('plans-list').innerHTML = listHTML;
-    }
-
-    function goHome() {
-        document.getElementById('service-container').style.display = 'none';
-        document.getElementById('main-menu').style.display = 'grid';
+        let history = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
+        let spent = history.reduce((a, b) => a + parseInt(b.price), 0);
+        document.getElementById('stat-spend').innerText = spent;
+        document.getElementById('stat-orders').innerText = history.length;
     }
 
     function sendOTP() {
         let name = document.getElementById('regName').value;
         let phone = document.getElementById('regPhone').value;
-        if(name.length < 3 || phone.length < 10) { alert("Please enter valid Name and Phone Number"); return; }
-        document.getElementById('login-step-1').style.opacity = '0.5';
-        setTimeout(() => {
-            document.getElementById('login-step-1').style.display = 'none';
-            document.getElementById('login-step-2').style.display = 'block';
-            document.getElementById('otp-loader').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('otp-loader').style.display = 'none';
-                document.getElementById('otpInput').value = Math.floor(1000 + Math.random() * 9000);
-            }, 2000);
-            localStorage.setItem('AYAN_USER_NAME', name);
-        }, 1500);
+        if(name.length < 3 || phone.length < 10) { alert("Invalid details"); return; }
+        
+        // Save temporary
+        sessionStorage.setItem('TEMP_NAME', name);
+        sessionStorage.setItem('TEMP_PHONE', phone);
+
+        document.getElementById('login-step-1').style.display = 'none';
+        document.getElementById('login-step-2').style.display = 'block';
+        setTimeout(() => { document.getElementById('otpInput').value = Math.floor(1000 + Math.random() * 9000); }, 1500);
     }
 
     function verifyOTP() {
-        let otp = document.getElementById('otpInput').value;
-        if(otp.length === 4) {
-            localStorage.setItem('AYAN_SMM_LOGIN', 'true');
-            isLoggedIn = true;
+        if(document.getElementById('otpInput').value.length === 4) {
+            let name = sessionStorage.getItem('TEMP_NAME');
+            let phone = sessionStorage.getItem('TEMP_PHONE');
+            
+            localStorage.setItem('AYAN_LOGIN', 'true');
+            localStorage.setItem('AYAN_PHONE', phone);
+            
+            // Check if user exists, else create
+            let userData = JSON.parse(localStorage.getItem(`USER_${phone}_DATA`) || "{}");
+            if(!userData.name) {
+                userData = { name: name, pic: "https://i.ibb.co/3kbcw0g/user-placeholder.png" };
+                localStorage.setItem(`USER_${phone}_DATA`, JSON.stringify(userData));
+            }
+            
             document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('user-status').innerText = "👤 " + localStorage.getItem('AYAN_USER_NAME');
-            document.getElementById('user-status').style.display = "block";
-            alert("Login Successful! 🎉");
-        } else { alert("Invalid OTP"); }
+            loadUserData();
+        }
     }
 
-    function initOrder(planName, price) {
-        if(!isLoggedIn) { document.getElementById('loginModal').style.display = 'flex'; return; }
-        currentPlanName = planName;
-        currentPrice = price;
-        let label = document.getElementById('link-label');
-        let input = document.getElementById('inputLink');
-        if(currentServiceData.type === 'profile') {
-            label.innerText = "Enter Instagram Username";
-            input.placeholder = "Ex: @ayan_king";
+    function doLogout() { 
+        localStorage.removeItem('AYAN_LOGIN'); 
+        location.reload(); 
+    }
+
+    // PROFILE EDIT
+    function openEditProfile() {
+        document.getElementById('profileModal').style.display = 'none';
+        document.getElementById('edit-name').value = currentUser.name;
+        document.getElementById('editProfileModal').style.display = 'flex';
+    }
+
+    function saveProfile() {
+        let name = document.getElementById('edit-name').value;
+        let file = document.getElementById('edit-pic-file').files[0];
+        let userData = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_DATA`) || "{}");
+        
+        if(name) userData.name = name;
+        
+        if(file) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                userData.pic = e.target.result;
+                localStorage.setItem(`USER_${currentUser.phone}_DATA`, JSON.stringify(userData));
+                location.reload();
+            };
+            reader.readAsDataURL(file);
         } else {
-            label.innerText = "Enter Post / Reel URL";
-            input.placeholder = "https://instagram.com/reel/....";
+            localStorage.setItem(`USER_${currentUser.phone}_DATA`, JSON.stringify(userData));
+            location.reload();
         }
-        input.value = "";
+    }
+
+    function openProfile() {
+        document.getElementById('dash-name').innerText = currentUser.name;
+        document.getElementById('dash-phone').innerText = "+91 " + currentUser.phone;
+        document.getElementById('dash-pic').src = currentUser.pic;
+        document.getElementById('dash-orders').innerText = document.getElementById('stat-orders').innerText;
+        document.getElementById('dash-spent').innerText = "₹" + document.getElementById('stat-spend').innerText;
+        document.getElementById('profileModal').style.display = 'flex';
+    }
+
+    // SERVICES & 30% DISCOUNT LOGIC
+    function loadService(key) {
+        let data = servicesData[key];
+        currentOrder.service = data.title;
+        currentOrder.type = data.type;
+        
+        document.getElementById('main-menu').style.display = 'none';
+        document.querySelector('.stats-card').style.display = 'none';
+        document.querySelector('.live-activity').style.display = 'none';
+        document.querySelector('.coming-soon-grid').style.display = 'none';
+        document.getElementById('service-container').style.display = 'block';
+        document.getElementById('sec-title').innerText = data.title;
+        
+        // CHECK IF USER HAS ORDERED BEFORE
+        let history = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
+        let isFirstTime = (history.length === 0);
+
+        let html = "";
+        data.plans.forEach(plan => {
+            let finalPrice = plan.regular;
+            let displayPrice = `<span class="price">₹${finalPrice}</span>`;
+
+            // APPLY 30% DISCOUNT ONLY FOR FOLLOWERS & FIRST ORDER
+            if(key === 'followers' && isFirstTime) {
+                finalPrice = Math.round(plan.regular * 0.7); // 30% OFF
+                displayPrice = `<span class="old-price">₹${plan.regular}</span> <span class="price">₹${finalPrice}</span>`;
+            }
+
+            html += `<div class="card">
+                <div class="plan-name">${plan.name}</div>
+                <div style="text-align:right;">${displayPrice}</div>
+                <button class="buy-btn" onclick="initOrder('${plan.name}', ${finalPrice})">BUY</button>
+            </div>`;
+        });
+        document.getElementById('plans-list').innerHTML = html;
+    }
+
+    function goHome() { location.reload(); }
+    
+    function initOrder(plan, price) {
+        currentOrder.plan = plan; currentOrder.price = price;
         document.getElementById('step-link').style.display = 'block';
         document.getElementById('step-pay').style.display = 'none';
         document.getElementById('step-verify').style.display = 'none';
         document.getElementById('processModal').style.display = 'flex';
+        document.getElementById('inputLink').placeholder = currentOrder.type === 'profile' ? "@username" : "https://instagram.com/...";
     }
-
-    function closeProcess() { document.getElementById('processModal').style.display = 'none'; }
 
     function goToPay() {
-        let val = document.getElementById('inputLink').value;
-        if(val.length < 3) { alert("Invalid Link"); return; }
-        userLink = val;
+        currentOrder.link = document.getElementById('inputLink').value;
+        if(currentOrder.link.length < 3) return;
         document.getElementById('step-link').style.display = 'none';
         document.getElementById('step-pay').style.display = 'block';
-        document.getElementById('pay-amt').innerText = currentPrice;
-    }
-
-    function goToVerify() {
-        document.getElementById('step-pay').style.display = 'none';
-        document.getElementById('step-verify').style.display = 'block';
-        document.getElementById('utr').value = "";
-        document.getElementById('valid-msg').style.display = 'none';
-        document.getElementById('wa-btn').style.display = 'none';
+        document.getElementById('pay-amt').innerText = currentOrder.price;
     }
 
     function checkUTR() {
-        let utr = document.getElementById('utr').value.toString();
-        if(utr.length === 12) {
-            document.getElementById('valid-msg').style.display = 'block';
-            document.getElementById('invalid-msg').style.display = 'none';
-            document.getElementById('wa-btn').style.display = 'block';
-            localStorage.setItem('AYAN_SMM_ORDER_DONE', 'true');
-            hasOrdered = true; 
-            let msg = `*NEW ORDER ALERT!* 🚀\n\n👤 *User:* ${localStorage.getItem('AYAN_USER_NAME')}\n📌 *Service:* ${currentServiceData.title}\n📦 *Plan:* ${currentPlanName}\n🔗 *Link:* ${userLink}\n💰 *Paid:* ₹${currentPrice}\n🆔 *UTR:* ${utr}\n✅ Verify and start.`;
-            document.getElementById('wa-btn').href = `https://wa.me/918116603529?text=${encodeURIComponent(msg)}`;
+        let v = document.getElementById('utr').value;
+        let btn = document.getElementById('final-btn');
+        let err = document.getElementById('utr-error');
+        if (/^\d{12}$/.test(v)) { btn.disabled = false; btn.style.background = "#22c55e"; btn.style.color = "black"; err.style.display = "none"; } 
+        else { btn.disabled = true; btn.style.background = "#333"; btn.style.color = "#777"; err.style.display = "block"; }
+    }
+
+    function submitOrder() {
+        let btn = document.getElementById('final-btn'); btn.innerText = "Processing...";
+        document.getElementById('f_service').value = currentOrder.service;
+        document.getElementById('f_plan').value = currentOrder.plan;
+        document.getElementById('f_price').value = "₹" + currentOrder.price;
+        document.getElementById('f_link').value = currentOrder.link;
+        document.getElementById('f_name').value = currentUser.name;
+        document.getElementById('f_phone').value = currentUser.phone;
+        document.getElementById('f_utr').value = document.getElementById('utr').value;
+
+        let form = document.getElementById('orderForm');
+        fetch(form.action, { method: "POST", body: new FormData(form) }).then(res => {
+            if(res.ok) {
+                let obj = { 
+                    id: Math.floor(Math.random() * 900000) + 100000, 
+                    plan: currentOrder.plan, 
+                    price: currentOrder.price, 
+                    service: currentOrder.service, 
+                    date: new Date().toLocaleString(), 
+                    link: currentOrder.link 
+                };
+                
+                // SAVE HISTORY PER USER
+                let historyKey = `USER_${currentUser.phone}_HIST`;
+                let history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+                history.push(obj);
+                localStorage.setItem(historyKey, JSON.stringify(history));
+                
+                // PLAY SOUND
+                let audio = document.getElementById('successAudio');
+                if(audio) audio.play().catch(e=>console.log(e));
+                
+                showReceipt(obj);
+            }
+        });
+    }
+
+    function showReceipt(order) {
+        document.getElementById('processModal').style.display = 'none';
+        document.getElementById('historyModal').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'flex';
+        
+        document.getElementById('ss-id').innerText = "#" + order.id;
+        document.getElementById('ss-plan').innerText = order.plan;
+        document.getElementById('ss-mobile').innerText = currentUser.phone;
+        document.getElementById('ss-price').innerText = "₹" + order.price;
+        document.getElementById('ss-time').innerText = order.date;
+    }
+
+    // SHARE FIX
+    function shareReceipt() {
+        let text = `ORDER RECEIPT\nID: ${document.getElementById('ss-id').innerText}\nService: ${document.getElementById('ss-plan').innerText}\nPaid: ${document.getElementById('ss-price').innerText}\nStatus: Successful`;
+        
+        if (navigator.share) {
+            navigator.share({ title: 'InstaBoost Receipt', text: text }).catch(() => copyToClipboard(text));
         } else {
-            document.getElementById('valid-msg').style.display = 'none';
-            document.getElementById('invalid-msg').style.display = 'block';
-            document.getElementById('wa-btn').style.display = 'none';
+            copyToClipboard(text);
         }
     }
-    
-    function forcePay(app) {
-        let baseUrl = `upi://pay?pa=${upiID}&am=${currentPrice}&cu=INR`;
-        if (app === 'phonepe') { window.location.href = baseUrl; } 
-        else if (app === 'gpay') { window.location.href = `tez://upi/pay?pa=${upiID}&am=${currentPrice}&cu=INR`; } 
-        else if (app === 'paytm') { window.location.href = `paytmmp://pay?pa=${upiID}&am=${currentPrice}&cu=INR`; } 
-        else { window.location.href = baseUrl; }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => alert("Receipt copied to clipboard!"));
     }
 
+    function openHistory() {
+        document.getElementById('historyModal').style.display = 'flex';
+        let list = document.getElementById('history-list'); list.innerHTML = "";
+        let history = JSON.parse(localStorage.getItem(`USER_${currentUser.phone}_HIST`) || "[]");
+        
+        if(history.length === 0) list.innerHTML = "<div style='padding:20px;text-align:center;color:#888;'>No orders yet</div>";
+        
+        history.reverse().forEach(o => {
+            let item = document.createElement('div'); item.className = 'hist-item';
+            item.onclick = function() { showReceipt(o); };
+            item.innerHTML = `<div><div style="font-weight:bold; color:white;">${o.plan}</div><div style="font-size:11px; color:#777;">${o.date}</div></div><div style="color:#22c55e; font-weight:bold;">₹${o.price}</div>`;
+            list.appendChild(item);
+        });
+    }
+
+    function startLiveTicker() {
+        const users = ["@rohan_x", "@priya_doll", "@gamer_1", "@amit_cool", "@king_srk", "@angel_p"];
+        const actions = ["ordered 100 Followers", "bought 500 Likes", "started Reel Views", "ordered 1000 Followers"];
+        setInterval(() => {
+            let u = users[Math.floor(Math.random() * users.length)];
+            let a = actions[Math.floor(Math.random() * actions.length)];
+            document.getElementById('live-ticker').innerText = `${u} ${a} just now...`;
+        }, 3000);
+    }
+
+    function closeSuccess() { location.reload(); }
+    function closeProcess() { document.getElementById('processModal').style.display = 'none'; }
+    function openHelp() { window.location.href = "https://ig.me/m/insta.boost._in"; }
+    function forcePay(app) {
+        let url = `upi://pay?pa=${upiID}&am=${currentOrder.price}&cu=INR`;
+        if(app === 'gpay') url = `tez://upi/pay?pa=${upiID}&am=${currentOrder.price}&cu=INR`;
+        if(app === 'paytm') url = `paytmmp://pay?pa=${upiID}&am=${currentOrder.price}&cu=INR`;
+        window.location.href = url;
+    }
     function showBackup() {
         document.getElementById('backup-copy').style.display = 'block';
-        document.getElementById('qr-amt').innerText = currentPrice;
-        let qrData = `upi://pay?pa=${upiID}&am=${currentPrice}&cu=INR`;
-        let qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
-        document.getElementById('dynamic-qr').src = qrURL;
+        document.getElementById('dynamic-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${upiID}&am=${currentOrder.price}&cu=INR`)}`;
     }
-
-    function copyID() {
-        navigator.clipboard.writeText(upiID).then(() => { alert("UPI ID Copied! Pay manually."); });
-    }
+    function copyID() { navigator.clipboard.writeText(upiID); alert("Copied"); }
+    function goToVerify() { document.getElementById('step-pay').style.display = 'none'; document.getElementById('step-verify').style.display = 'block'; }
 </script>
 
 </body>
